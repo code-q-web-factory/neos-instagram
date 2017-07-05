@@ -1,0 +1,14 @@
+{
+    "name": "codeq/instagram",
+    "type": "neos-package",
+    "description": "EEL helper to query the Instagram API",
+    "license": "GPL-3.0+",
+    "require": {
+        "neos/neos": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "CodeQ\\Instagram\\": "Classes"
+        }
+    }
+}
