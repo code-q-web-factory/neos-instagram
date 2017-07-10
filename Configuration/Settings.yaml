@@ -1,0 +1,11 @@
+Neos:
+  Fusion:
+    defaultContext:
+      Instagram: 'Krsriq\InstagramHelper\Eel\InstagramHelper'
+  Neos:
+    fusion:
+      autoInclude:
+        CodeQ.InstagramHelper: true
+CodeQ:
+  InstagramHelper:
+    accessToken: 'accessToken'
