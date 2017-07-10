@@ -22,8 +22,6 @@ class InstagramHelper implements ProtectedContextAwareInterface {
 
     public function getInstagramFeed( $requestType,  $get_param) {
         $access_token = $this->settings['accessToken'];
-
-        // $access_token = '5711682257.a07b594.c7ec200f2e4d4e07b933d0f6ed1fb3fa';
         $response = $this->getRecentImages($requestType, $get_param, $access_token);
 
         return json_decode($response)->data;
