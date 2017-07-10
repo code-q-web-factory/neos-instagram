@@ -10,5 +10,10 @@
         "psr-4": {
             "CodeQ\\InstagramHelper\\": "Classes"
         }
+    },
+    "extra": {
+        "neos": {
+            "package-key": "CodeQ.InstagramHelper"
+        }
     }
 }
