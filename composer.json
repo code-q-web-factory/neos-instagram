@@ -8,7 +8,7 @@
     },
     "autoload": {
         "psr-4": {
-            "CodeQ\\InstagramHelper\\": "Classes"
+            "CodeQ\\InstagramHelper\\": "Classes/"
         }
     },
     "extra": {
