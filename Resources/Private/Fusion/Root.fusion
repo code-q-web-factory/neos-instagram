@@ -1,9 +1,9 @@
-prototype(CodeQ.Site:InstagramGallery) < prototype(Neos.Fusion:Collection) {
+prototype(CodeQ.Instagram:InstagramGallery) < prototype(Neos.Fusion:Collection) {
 	@context.count = 10
 	collection = ${CodeQ.Site.getInstagramFeed('users/self/media/recent', '&count=' + count)}
 
 	itemName = 'instagram'
-	itemRenderer = CodeQ.Site:Instagram
+	itemRenderer = CodeQ.Instagram:Instagram
 
 	@cache {
 		mode = 'cached'
@@ -11,7 +11,7 @@ prototype(CodeQ.Site:InstagramGallery) < prototype(Neos.Fusion:Collection) {
 	}
 }
 
-prototype(CodeQ.Site:Instagram) < prototype(Neos.Fusion:Template) {
+prototype(CodeQ.Instagram:Instagram) < prototype(Neos.Fusion:Template) {
 	templatePath = 'resource://CodeQ.InstagramHelper/Private/Templates/Instagram.html'
 	instagram = ${instagram}
 }

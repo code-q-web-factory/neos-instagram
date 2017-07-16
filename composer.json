@@ -8,12 +8,12 @@
     },
     "autoload": {
         "psr-4": {
-            "CodeQ\\InstagramHelper\\": "Classes/"
+            "CodeQ\\Instagram\\": "Classes/"
         }
     },
     "extra": {
         "neos": {
-            "package-key": "CodeQ.InstagramHelper"
+            "package-key": "CodeQ.Instagram"
         }
     }
 }

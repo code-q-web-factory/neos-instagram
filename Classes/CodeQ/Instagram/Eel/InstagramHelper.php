@@ -1,5 +1,5 @@
 <?php
-namespace CodeQ\InstagramHelper\Eel;
+namespace CodeQ\Instagram\Eel;
 
 use Neos\Eel\ProtectedContextAwareInterface;
 use Neos\Flow\Annotations as Flow;
@@ -7,7 +7,7 @@ use Neos\Flow\Annotations as Flow;
 
 /* Eel helper as a wrapper around Twitter API
 */
-class InstagramHelper implements ProtectedContextAwareInterface {
+class Instagram implements ProtectedContextAwareInterface {
 
     protected $settings;
 
