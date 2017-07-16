@@ -6,6 +6,3 @@ Neos:
     fusion:
       autoInclude:
         CodeQ.Instagram: true
-CodeQ:
-  Instagram:
-    accessToken: 'accessToken'

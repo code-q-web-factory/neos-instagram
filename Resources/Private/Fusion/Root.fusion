@@ -1,6 +1,6 @@
 prototype(CodeQ.Instagram:InstagramGallery) < prototype(Neos.Fusion:Collection) {
 	@context.count = 10
-	collection = ${CodeQ.Site.getInstagramFeed('users/self/media/recent', '&count=' + count)}
+	collection = ${Instagram.getInstagramFeed('users/self/media/recent', '&count=' + count)}
 
 	itemName = 'instagram'
 	itemRenderer = CodeQ.Instagram:Instagram
@@ -12,6 +12,6 @@ prototype(CodeQ.Instagram:InstagramGallery) < prototype(Neos.Fusion:Collection) 
 }
 
 prototype(CodeQ.Instagram:Instagram) < prototype(Neos.Fusion:Template) {
-	templatePath = 'resource://CodeQ.InstagramHelper/Private/Templates/Instagram.html'
+	templatePath = 'resource://CodeQ.Instagram/Private/Templates/Instagram.html'
 	instagram = ${instagram}
 }
