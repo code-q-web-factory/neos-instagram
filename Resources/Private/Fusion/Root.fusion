@@ -1,5 +1,5 @@
 prototype(CodeQ.Instagram:InstagramGallery) < prototype(Neos.Fusion:Collection) {
-	@context.count = 10
+	@context.count = 6
 	collection = ${Instagram.getInstagramFeed('users/self/media/recent', '&count=' + count)}
 
 	itemName = 'instagram'
