@@ -4,7 +4,7 @@
     "description": "EEL helper to query the Instagram API",
     "license": "GPL-3.0+",
     "require": {
-        "neos/neos": "*"
+        "neos/neos": "~3.0"
     },
     "autoload": {
         "psr-0": {
