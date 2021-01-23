@@ -1,0 +1,8 @@
+CodeQ:
+  Instagram:
+    token: ''
+
+    apiEndpoints:
+      timeout: 90000
+      # API docs at https://developers.facebook.com/docs/instagram-basic-display-api/reference/media
+      instagramMediaUrl: 'https://graph.instagram.com/me/media'

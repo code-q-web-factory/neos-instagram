@@ -1,0 +1,21 @@
+prototype(CodeQ.Instagram:ImagesList) < prototype(Neos.Fusion:Component) {
+	limit = 6
+	# currently get images returns up to 24 items as first page
+	# but since not all feed items are images, you might get less and should consider getting
+	# a second page when you need more then ~10 images.
+	collection = ${Array.filter(Instagram.getFeed(), item => item.media_type == 'IMAGE')}
+	attributes = Neos.Fusion:Attributes
+
+	renderer = afx`
+		<Neos.Fusion:Tag tagName="ul" attributes={props.attributes}>
+			<Neos.Fusion:Loop items={Array.slice(props.collection, 0, props.limit)} itemName="item" @children="itemRenderer">
+				<CodeQ.Instagram:Image item={item} />
+			</Neos.Fusion:Loop>
+		</Neos.Fusion:Tag>
+	`
+
+	@cache {
+		mode = 'cached'
+		# maximumLifetime = '3600'
+	}
+}

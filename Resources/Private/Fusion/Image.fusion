@@ -1,0 +1,12 @@
+prototype(CodeQ.Instagram:Image) < prototype(Neos.Fusion:Component) {
+	item = false
+
+	@is.has = ${this.item}
+	renderer = afx`
+		<li>
+			<a href={props.item.permalink} target="_blank">
+				<img src={props.item.media_url} alt={props.item.caption} />
+			</a>
+		</li>
+	`
+}

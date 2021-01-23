@@ -1,32 +1,54 @@
-# Instagram EEL Helper
+# BETA: Instagram images list for Neos CMS
 
-## TL;DR
+This package retrieves instagram media files through the Facebook API to display it. 
+Version two implements the new Facebook API, but has some rough edges, so please consider it beta. 
 
-1. Install the package: `composer require codeq/instagram`
-2. Go to https://www.instagram.com/developer/ and create a new app
-3. Go to https://www.instagram.com/developer/authentication/ and generate an access token. Copy that token to your `Settings.yaml` file in the following way:
+__Please note:__ In this release you still need to manually refresh the token. 
+Automatically refreshing of tokens is a bit complex and would only make sense if more people use it. 
+If you are start using the package and would like to foster the development please write me at rs@codeq.at
 
-```
-CodeQ:
-  Instagram:
-    accessToken: XXX
-```
+*The development and the public-releases of this package are generously sponsored by [Code Q Web Factory](http://codeq.at).*
 
-That's all! Now you can use the ready-made `CodeQ.Instagram:InstagramGallery` TS object, e.g.:
+## Installation
 
-```
-instagram = CodeQ.Instagram:InstagramGallery {
-		count = 6
-	}
+CodeQ.Instagram is available via packagist, and compatible to the Facebook API in version 2.
+Add `"codeq/instagram" : "~2.0"` to the require section of the composer.json or run:
+
+```bash
+composer require codeq/instagram
 ```
 
-To adjust the looks, alter the `CodeQ.Instagram:Instagram` TS object. It has `data` context variable with all of the fields described here: https://www.instagram.com/developer/endpoints/users/#get_users_media_recent_self
+We use semantic-versioning so every breaking change will increase the major-version number.
 
-Or you can use the EEL helper directly to make any kind of GET request to the Instagram API, e.g.:
-`${Twitter.getRequest('media/search', '?lat=48.858844&lng=2.294351')}`
+## Usage
 
-The EEL helper takes two arguments: Instagram API GET endpoint name and GET arguments for that endpoint.
+1. Create a Facebook Instagram app. Complete steps 1-5 of 
+[these Facebook instructions](https://developers.facebook.com/docs/instagram-basic-display-api/getting-started)
+until and including "Step 5: Exchange the Code for a Token".
+2. Manually set the given token in YAML as the variable `CodeQ.Instagram.token`
 
-**The development of this plugin was kindly sponsored by [CODE Q](https://www.codeq.at/)**
+According to the official Facebook docs, the token has a lifespan of 60 days.
+In my own usage this is not the case, and it actually lives longer - not sure why.
+BUT you currently need to manually refresh this token.
+
+## How to render images
+
+	<CodeQ.Instagram:ImagesList
+		attributes.class="instagram-images-list instagram-images-list--images-per-row-3"
+		limit="12"
+		/>
+
+By default, we do not include any styling. Feel free to include `Resources/Private/Fusion/InstagramList.scss` 
+into your own build process are create any custom styling.
+
+## License
+
+Licensed under MIT, see [LICENSE](LICENSE)
+
+## Contribution
+
+We will gladly accept contributions. Please send us pull requests.
+
+---------
 
 <img src="codeq.png" alt="Code Q" width="200"/>

@@ -2,10 +2,26 @@
     "name": "codeq/instagram",
     "type": "neos-package",
     "description": "EEL helper to query the Instagram API",
-    "license": "GPL-3.0+",
+	"license": "MIT",
     "require": {
         "neos/neos": "~3.2 || ~4.0 || ~5.0 || dev-master"
     },
+	"authors": [
+		{
+			"name": "Roland Schütz",
+			"email": "rs@codeq.at",
+			"homepage": "https://codeq.at",
+			"role": "Developer"
+		}
+	],
+	"archive": {
+		"exclude": [
+			".editorconfig",
+			".gitattributes",
+			".github",
+			".gitignore"
+		]
+	},
     "autoload": {
         "psr-0": {
             "CodeQ\\Instagram": "Classes/"

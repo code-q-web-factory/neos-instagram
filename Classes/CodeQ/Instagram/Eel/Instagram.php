@@ -4,44 +4,86 @@ namespace CodeQ\Instagram\Eel;
 use Neos\Eel\ProtectedContextAwareInterface;
 use Neos\Flow\Annotations as Flow;
 
-
-/* Eel helper as a wrapper around Twitter API
-*/
+/**
+ * Class Instagram
+ * @package CodeQ\Instagram\Eel
+ *
+ */
 class Instagram implements ProtectedContextAwareInterface {
 
-    protected $settings;
+    protected array $settings;
 
-    /* Inject the settings
+    /**
+    * Inject the settings
     *
     * @param array $settings
     * @return void
-*/
+    */
     public function injectSettings(array $settings) {
         $this->settings = $settings;
     }
 
-    public function getInstagramFeed( $requestType,  $get_param) {
-        $access_token = $this->settings['accessToken'];
+    /**
+     * @return array|mixed
+     * @throws \Exception
+     */
+    public function getFeed()
+    {
+        $token = $this->settings['token'];
 
-        $response = $this->getRecentImages($requestType, $get_param, $access_token);
-		$decoded_response = json_decode($response);
+        $apiData = [
+            'fields' => 'id,caption,permalink,media_type,media_url,timestamp',
+            'access_token' => $token
+        ];
 
-        return isset($decoded_response->data) ? $decoded_response->data : [];
+        $result = $this->makeApiCall($this->settings['apiEndpoints']['instagramMediaUrl'], $apiData, 'GET');
+
+        if(isset($result['error'])) {
+            throw new \Exception('Instagram API Error: ' . json_encode($result));
+        }
+
+        return isset($result['data']) ? $result['data'] : [];
     }
 
-    function getRecentImages($requestType, $get_params, $access_token){
+    /**
+     * @param $apiHost
+     * @param $params
+     * @param  string  $method
+     * @return mixed
+     * @throws \Exception
+     */
+    private function makeApiCall($apiHost, $params, $method = 'POST')
+    {
+        $paramString = null;
 
-        $url = "https://api.instagram.com/v1/$requestType/?access_token=$access_token&$get_params";
+        if (isset($params) && is_array($params)) {
+            $paramString = '?'.http_build_query($params);
+        }
+
+        $apiCall = $apiHost.(('GET' === $method) ? $paramString : null);
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        return $result;
-    }
+        curl_setopt($ch, CURLOPT_URL, $apiCall);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT_MS, $this->settings['apiEndpoints']['timeout']);
 
+        if ($method === 'POST') {
+            curl_setopt($ch, CURLOPT_POST, count($params));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+        }
+
+        $jsonData = curl_exec($ch);
+
+        if (!$jsonData) {
+            throw new \Exception('Error: _makeOAuthCall() - cURL error: '.curl_error($ch));
+        }
+
+        curl_close($ch);
+
+        return json_decode($jsonData, 1);
+    }
 
     public function allowsCallOfMethod($methodName) {
         return true;
