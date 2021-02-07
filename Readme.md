@@ -25,11 +25,9 @@ We use semantic-versioning so every breaking change will increase the major-vers
 1. Create a Facebook Instagram app. Complete steps 1-5 of 
 [these Facebook instructions](https://developers.facebook.com/docs/instagram-basic-display-api/getting-started)
 until and including "Step 5: Exchange the Code for a Token".
-2. Manually set the given token in YAML as the variable `CodeQ.Instagram.token`
+2. Set the Instagram app id as `CodeQ.Instagram.appId` and the app secret as `CodeQ.Instagram.appSecret` in your project configuration
+3. Go to https://api.instagram.com/oauth/authorize?client_id={YOUR_APP_ID}&redirect_uri=https://{YOUR_DOMAIN}/instagram-endpoint&scope=user_profile,user_media&response_type=code and run the authorization process. Make sure that the redirect uri is set as such in your app settings on Facebook!
 
-According to the official Facebook docs, the token has a lifespan of 60 days.
-In my own usage this is not the case, and it actually lives longer - not sure why.
-BUT you currently need to manually refresh this token.
 
 ## How to render images
 

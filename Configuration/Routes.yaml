@@ -1,0 +1,8 @@
+-
+  name: 'Instagram OAuth Authorize Endpoint'
+  uriPattern: 'instagram-endpoint(/{@action})'
+  defaults:
+    '@package': 'CodeQ.Instagram'
+    '@controller': 'InstagramEndpoint'
+    '@format': 'json'
+    '@action': 'authorize'

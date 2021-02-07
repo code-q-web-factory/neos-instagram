@@ -1,0 +1,6 @@
+CodeQ_Instagram_TokenCache:
+  frontend: Neos\Cache\Frontend\VariableFrontend
+  backend: Neos\Cache\Backend\FileBackend
+  persistent: true
+  backendOptions:
+    defaultLifetime: 0

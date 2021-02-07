@@ -1,6 +1,7 @@
 <?php
 namespace CodeQ\Instagram\Eel;
 
+use CodeQ\Instagram\Domain\Service\InstagramService;
 use Neos\Eel\ProtectedContextAwareInterface;
 use Neos\Flow\Annotations as Flow;
 
@@ -23,32 +24,11 @@ use Neos\Flow\Annotations as Flow;
  */
 class Instagram implements ProtectedContextAwareInterface {
 
-    protected array $settings;
-
     /**
-    * Inject the settings
-    *
-    * @param array $settings
-    * @return void
-    */
-    public function injectSettings(array $settings) {
-        $this->settings = $settings;
-    }
-
-    /**
-     * @param $token
-     * @return mixed
-     * @throws \Exception
+     * @Flow\Inject
+     * @var InstagramService
      */
-    public function refreshToken($token)
-    {
-        $apiData = [
-            'grant_type' => 'ig_refresh_token',
-            'access_token' => $token
-        ];
-
-        return $this->makeApiCall($this->settings['apiEndpoints']['tokenRefreshUrl'], $apiData, 'GET');
-    }
+    protected $instagramService;
 
     /**
      * @return array|mixed
@@ -56,128 +36,36 @@ class Instagram implements ProtectedContextAwareInterface {
      */
     public function getFeed()
     {
-        $token = $this->settings['token'];
-
-        $apiData = [
-            'fields' => 'id,caption,permalink,media_type,media_url,timestamp',
-            'access_token' => $token
-        ];
-
-        $result = $this->makeApiCall($this->settings['apiEndpoints']['instagramMediaUrl'], $apiData, 'GET');
-
-        if(isset($result['error'])) {
-            throw new \Exception('Instagram API Error: ' . json_encode($result));
-        }
-
-        return isset($result['data']) ? $result['data'] : [];
+        return $this->instagramService->getFeed();
     }
 
     /**
-     * @param $code
-     * @param $appId
-     * @param $appSecret
-     * @param $redirectUri
-     * @return mixed
-     * @throws \Exception
+     * @return array|mixed
+     * @throws \Neos\Cache\Exception
+     * @throws \Neos\Flow\Exception
      */
-    public function getToken($code, $appId, $appSecret, $redirectUri)
+    public function getToken()
     {
-        $shortLivedToken = $this->getShortLivedToken($appId, $appSecret, $redirectUri, $code);
-        return $this->getLongLivedToken($shortLivedToken, $appSecret);
+        return $this->instagramService->getToken()['token'];
     }
 
     /**
-     * @param $apiHost
-     * @param $params
-     * @param  string  $method
-     * @return mixed
-     * @throws \Exception
+     * @return int|mixed
+     * @throws \Neos\Cache\Exception
+     * @throws \Neos\Flow\Exception
      */
-    private function makeApiCall($apiHost, $params, $method = 'POST')
+    public function getTokenLifetime()
     {
-        $paramString = null;
-
-        if (isset($params) && is_array($params)) {
-            $paramString = '?'.http_build_query($params);
-        }
-
-        $apiCall = $apiHost.(('GET' === $method) ? $paramString : null);
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $apiCall);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_TIMEOUT_MS, $this->settings['apiEndpoints']['timeout']);
-
-        if ($method === 'POST') {
-            curl_setopt($ch, CURLOPT_POST, count($params));
-            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
-        }
-
-        $jsonData = curl_exec($ch);
-
-        if (!$jsonData) {
-            throw new \Exception('Error: _makeOAuthCall() - cURL error: '.curl_error($ch));
-        }
-
-        curl_close($ch);
-
-        return json_decode($jsonData, 1);
+        return $this->instagramService->getTokenLifetime();
     }
 
     /**
-     * @param $token
-     * @param $appSecret
-     * @return mixed
-     * @throws \Exception
+     * @param string $methodName
+     *
+     * @return bool
      */
-    private function getLongLivedToken($token, $appSecret)
+    public function allowsCallOfMethod($methodName)
     {
-        $apiData = [
-            'client_secret' => $appSecret,
-            'grant_type' => 'ig_exchange_token',
-            'access_token' => $token
-        ];
-
-        $result = $this->makeApiCall($this->settings['apiEndpoints']['tokenExchangeUrl'], $apiData, 'GET');
-
-        if (!isset($result->access_token)) {
-            throw new \Exception("Could not retrieve long lived access token: $result->error_message");
-        }
-
-        return $result->access_token;
-    }
-
-    /**
-     * @param $appId
-     * @param $appSecret
-     * @param $redirectUri
-     * @param $code
-     * @return mixed
-     * @throws \Exception
-     */
-    private function getShortLivedToken($appId, $appSecret, $redirectUri, $code)
-    {
-        $apiData = [
-            'app_id' => $appId,
-            'app_secret' => $appSecret,
-            'grant_type' => 'authorization_code',
-            'redirect_uri' => $redirectUri,
-            'code' => $code
-        ];
-
-        $result = $this->makeApiCall($this->settings['apiEndpoints']['oauthTokenUrl'], $apiData);
-
-        if (!isset($result->access_token)) {
-            throw new \Exception("Could not retrieve short lived access token: $result->error_message");
-        }
-
-        return $result->access_token;
-    }
-
-
-    public function allowsCallOfMethod($methodName) {
         return true;
     }
 }
