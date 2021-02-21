@@ -1,5 +1,7 @@
 CodeQ:
   Instagram:
+    appId: ''
+    appSecret: ''
     token: ''
 
     apiEndpoints:
