@@ -2,7 +2,6 @@ CodeQ:
   Instagram:
     appId: ''
     appSecret: ''
-    token: ''
 
     apiEndpoints:
       timeout: 90000
