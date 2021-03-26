@@ -16,6 +16,6 @@ prototype(CodeQ.Instagram:ImagesList) < prototype(Neos.Fusion:Component) {
 
 	@cache {
 		mode = 'cached'
-		# maximumLifetime = '3600'
+		maximumLifetime = ${Instagram.getTokenLifetime()}
 	}
 }

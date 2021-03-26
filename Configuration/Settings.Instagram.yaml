@@ -1,8 +1,13 @@
 CodeQ:
   Instagram:
-    token: ''
+    appId: ''
+    appSecret: ''
 
     apiEndpoints:
       timeout: 90000
+      # you probably never want to change these
+      oauthTokenUrl: 'https://api.instagram.com/oauth/access_token'
+      tokenExchangeUrl: 'https://graph.instagram.com/access_token'
+      tokenRefreshUrl: 'https://graph.instagram.com/refresh_access_token'
       # API docs at https://developers.facebook.com/docs/instagram-basic-display-api/reference/media
       instagramMediaUrl: 'https://graph.instagram.com/me/media'

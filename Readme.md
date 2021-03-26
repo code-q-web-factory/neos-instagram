@@ -1,18 +1,14 @@
-# BETA: Instagram images list for Neos CMS
+# Instagram images list for Neos CMS
 
 This package retrieves instagram media files through the Facebook API to display it. 
-Version two implements the new Facebook API, but has some rough edges, so please consider it beta. 
-
-__Please note:__ In this release you still need to manually refresh the token. 
-Automatically refreshing of tokens is a bit complex and would only make sense if more people use it. 
-If you are start using the package and would like to foster the development please write me at rs@codeq.at
+Version two implements the new Facebook API. 
 
 *The development and the public-releases of this package are generously sponsored by [Code Q Web Factory](http://codeq.at).*
 
 ## Installation
 
 CodeQ.Instagram is available via packagist, and compatible to the Facebook API in version 2.
-Add `"codeq/instagram" : "~2.0"` to the require section of the composer.json or run:
+Add `"codeq/instagram" : "~2.1"` to the require section of the composer.json or run:
 
 ```bash
 composer require codeq/instagram
@@ -22,14 +18,11 @@ We use semantic-versioning so every breaking change will increase the major-vers
 
 ## Usage
 
-1. Create a Facebook Instagram app. Complete steps 1-5 of 
+1. Create a Facebook Instagram app. Complete steps 1-4 of 
 [these Facebook instructions](https://developers.facebook.com/docs/instagram-basic-display-api/getting-started)
-until and including "Step 5: Exchange the Code for a Token".
-2. Manually set the given token in YAML as the variable `CodeQ.Instagram.token`
-
-According to the official Facebook docs, the token has a lifespan of 60 days.
-In my own usage this is not the case, and it actually lives longer - not sure why.
-BUT you currently need to manually refresh this token.
+until and including "Step 3: Create instagram test user". As OAuth Redirect URI please use https://{YOUR_DOMAIN}.at/instagram-endpoint
+2. Set the Instagram app id as `CodeQ.Instagram.appId` and the app secret as `CodeQ.Instagram.appSecret` in your project configuration
+3. Follow ["Step 4: Authenticate test user"]((https://developers.facebook.com/docs/instagram-basic-display-api/getting-started)) and go to https://api.instagram.com/oauth/authorize?client_id={YOUR_APP_ID}&redirect_uri=https://{YOUR_DOMAIN}/instagram-endpoint&scope=user_profile,user_media&response_type=code and run the authorization process. 
 
 ## How to render images
 

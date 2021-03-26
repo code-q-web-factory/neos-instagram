@@ -1,6 +1,7 @@
 <?php
 namespace CodeQ\Instagram\Eel;
 
+use CodeQ\Instagram\Domain\Service\InstagramService;
 use Neos\Eel\ProtectedContextAwareInterface;
 use Neos\Flow\Annotations as Flow;
 
@@ -8,20 +9,26 @@ use Neos\Flow\Annotations as Flow;
  * Class Instagram
  * @package CodeQ\Instagram\Eel
  *
+ * This class can be used to create and refresh Instagram access tokens as well as to retrieve Instagram media files.
+ *
+ * First you have to setup a Facebook Instagram app. To do so follow the instructions up until
+ * "Step 5: Exchange the Code for a Token" at
+ * https://developers.facebook.com/docs/instagram-basic-display-api/getting-started
+ *
+ * Then you can create a long-lived access token by clicking on the button "Generate Token" in Facebook developer's
+ * "User Token Generator" or use the function getToken.
+ *
+ * The token has a lifespan of 60 days - to refresh the token you can use the function refreshToken.
+ *
+ * To retrieve Media files you can use the function getInstagramFeed.
  */
 class Instagram implements ProtectedContextAwareInterface {
 
-    protected array $settings;
-
     /**
-    * Inject the settings
-    *
-    * @param array $settings
-    * @return void
-    */
-    public function injectSettings(array $settings) {
-        $this->settings = $settings;
-    }
+     * @Flow\Inject
+     * @var InstagramService
+     */
+    protected $instagramService;
 
     /**
      * @return array|mixed
@@ -29,63 +36,36 @@ class Instagram implements ProtectedContextAwareInterface {
      */
     public function getFeed()
     {
-        $token = $this->settings['token'];
-
-        $apiData = [
-            'fields' => 'id,caption,permalink,media_type,media_url,timestamp',
-            'access_token' => $token
-        ];
-
-        $result = $this->makeApiCall($this->settings['apiEndpoints']['instagramMediaUrl'], $apiData, 'GET');
-
-        if(isset($result['error'])) {
-            throw new \Exception('Instagram API Error: ' . json_encode($result));
-        }
-
-        return isset($result['data']) ? $result['data'] : [];
+        return $this->instagramService->getFeed();
     }
 
     /**
-     * @param $apiHost
-     * @param $params
-     * @param  string  $method
-     * @return mixed
-     * @throws \Exception
+     * @return array|mixed
+     * @throws \Neos\Cache\Exception
+     * @throws \Neos\Flow\Exception
      */
-    private function makeApiCall($apiHost, $params, $method = 'POST')
+    public function getToken()
     {
-        $paramString = null;
-
-        if (isset($params) && is_array($params)) {
-            $paramString = '?'.http_build_query($params);
-        }
-
-        $apiCall = $apiHost.(('GET' === $method) ? $paramString : null);
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $apiCall);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_TIMEOUT_MS, $this->settings['apiEndpoints']['timeout']);
-
-        if ($method === 'POST') {
-            curl_setopt($ch, CURLOPT_POST, count($params));
-            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
-        }
-
-        $jsonData = curl_exec($ch);
-
-        if (!$jsonData) {
-            throw new \Exception('Error: _makeOAuthCall() - cURL error: '.curl_error($ch));
-        }
-
-        curl_close($ch);
-
-        return json_decode($jsonData, 1);
+        return $this->instagramService->getToken()['token'];
     }
 
-    public function allowsCallOfMethod($methodName) {
+    /**
+     * @return int|mixed
+     * @throws \Neos\Cache\Exception
+     * @throws \Neos\Flow\Exception
+     */
+    public function getTokenLifetime()
+    {
+        return $this->instagramService->getTokenLifetime();
+    }
+
+    /**
+     * @param string $methodName
+     *
+     * @return bool
+     */
+    public function allowsCallOfMethod($methodName)
+    {
         return true;
     }
 }

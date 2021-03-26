@@ -1,0 +1,9 @@
+CodeQ\Instagram\Domain\Service\InstagramService:
+  properties:
+    instagramTokenCache:
+      object:
+        factoryObjectName: Neos\Flow\Cache\CacheManager
+        factoryMethodName: getCache
+        arguments:
+          1:
+            value: CodeQ_Instagram_TokenCache
