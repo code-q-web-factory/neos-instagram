@@ -5,6 +5,7 @@ namespace CodeQ\Instagram\Domain\Service;
 use Neos\Cache\Frontend\VariableFrontend;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Exception;
+use Psr\Log\LoggerInterface;
 
 class InstagramService
 {
@@ -17,6 +18,12 @@ class InstagramService
     protected $instagramTokenCache;
 
     protected array $settings;
+
+    /**
+     * @Flow\Inject
+     * @var LoggerInterface
+     */
+    protected $systemLogger;
 
     /**
      * Inject the settings
@@ -72,9 +79,15 @@ class InstagramService
         ) {
             if (($tokenFromCache['expires'] - (30 * 24 * 60 * 60)) < time()) {
                 $refreshedToken = $this->refreshToken($tokenFromCache['token']);
-                $tokenFromCache
-                    = $this->cacheLongLivingToken($refreshedToken['access_token'],
-                    $refreshedToken['expires']);
+
+                if (is_array($refreshedToken)
+                    && array_key_exists('access_token', $refreshedToken)
+                    && array_key_exists('expires_in', $refreshedToken)
+                ) {
+                    $tokenFromCache = $this->cacheLongLivingToken($refreshedToken['access_token'], $refreshedToken['expires_in']);
+                } else {
+                    $this->systemLogger->warning('Could not retrieve refreshed Instagram API token');
+                }
             }
 
             return $tokenFromCache;
