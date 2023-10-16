@@ -5,7 +5,7 @@ prototype(CodeQ.Instagram:Image) < prototype(Neos.Fusion:Component) {
 	renderer = afx`
 		<li>
 			<a href={props.item.permalink} target="_blank">
-				<img src={props.item.media_url} alt={props.item.caption} />
+				<img src={props.item.thumbnail_url || props.item.media_url} alt={props.item.caption} />
 			</a>
 		</li>
 	`

@@ -46,7 +46,7 @@ class InstagramService
         $token = $this->getToken()['token'];
 
         $apiData = [
-            'fields' => 'id,caption,permalink,media_type,media_url,timestamp',
+            'fields' => 'id,caption,permalink,media_type,media_url,thumbnail_url,timestamp',
             'access_token' => $token
         ];
 
