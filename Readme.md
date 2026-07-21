@@ -1,4 +1,4 @@
-# Instagram images list for Neos CMS
+# DEPRECATED - Instagram images list for Neos CMS
 
 This package retrieves instagram media files through the Facebook API to display it. 
 Version two implements the new Facebook API. 
